@@ -1,0 +1,64 @@
+# ======================
+# Arquivos de ambiente
+# ======================
+.env
+
+# ======================
+# Arquivos Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ======================
+# Ambientes Virtuais
+# ======================
+.env/
+venv/
+ENV/
+env/
+
+# ======================
+# Configurações do Editor
+# ======================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ======================
+# Logs, dumps e arquivos temporários
+# ======================
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+
+# ======================
+# Docker
+# ======================
+*.tar
+*.pid
+docker-compose.override.yml
+
+# ======================
+# Testes
+# ======================
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+pytest_cache/
+coverage.xml
+
+# ======================
+# Build e distribuição
+# ======================
+build/
+dist/
+*.egg-info/
+.eggs/

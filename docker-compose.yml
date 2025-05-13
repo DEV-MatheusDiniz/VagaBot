@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  vagaBot:
+    build: .
+    image: vagaBot
+    container_name: vagaBot
+    restart: always
+    environment:
+      - TZ=America/Sao_Paulo
+      - MODO_OCULTO=True
+      - JOBS_LINKEDIN_VAGAS_TELEGRAM_DEV_CHATID=-1002329573313
+      - JOBS_LINKEDIN_VAGAS_TELEGRAM_DIREITO_CHATID=-4645681699
+      - JOBS_LINKEDIN_VAGAS_TELEGRAM_CONTABIL_CHATID=-4640027126
+      - JOBS_LINKEDIN_VAGAS_TELEGRAM_EMPRESAS_CHATID=-1002517931621

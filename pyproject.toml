@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "automação linkedin vagas"
+version = "0.1.0"
+description = ""
+authors = ["Diniz <mamakerrykinh@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selenium = "^4.29.0"
+webdriver-manager = "^4.0.2"
+django-environ = "^0.12.0"
+schedule = "^1.2.2"
+environs = "^14.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
