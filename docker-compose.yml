@@ -3,7 +3,7 @@ version: '3'
 services:
   vagaBot:
     build: .
-    image: vagaBot
+    image: vaga-bot
     container_name: vagaBot
     restart: always
     environment:
