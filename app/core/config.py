@@ -38,7 +38,7 @@ class Settings:
                 "candidatura_simplificada": False,
                 "ate_10_candidaturas": True,
                 "remoto": True,
-            }
+            },
         },
         {
             "tema": "Direito",
@@ -52,7 +52,7 @@ class Settings:
                 "candidatura_simplificada": True,
                 "ate_10_candidaturas": True,
                 "remoto": True,
-            }
+            },
         },
         {
             "tema": "Contabilidade",
@@ -67,14 +67,16 @@ class Settings:
                 "candidatura_simplificada": False,
                 "ate_10_candidaturas": True,
                 "remoto": True,
-            }
+            },
         },
         {
             "tema": "Empresas",
             "telegram_chatid": env.str("JOBS_LINKEDIN_VAGAS_TELEGRAM_EMPRESAS_CHATID"),
             "buscas": [
-                "Sicoob", "Hepta",
-                "G4F", "Ifood",
+                "Sicoob",
+                "Hepta",
+                "G4F",
+                "Ifood",
             ],
             "filtros": {
                 "ordem_mais_recente": True,
@@ -82,7 +84,7 @@ class Settings:
                 "candidatura_simplificada": False,
                 "ate_10_candidaturas": True,
                 "remoto": False,
-            }
+            },
         },
     ]
 
@@ -91,9 +93,12 @@ class Settings:
 
     # Scheduler
     SCHEDULE_HORARIOS: list = [
-        "08:00", "10:00",
-        "12:00", "14:00",
-        "16:00", "18:00",
+        "08:00",
+        "10:00",
+        "12:00",
+        "14:00",
+        "16:00",
+        "18:00",
     ]
 
     # Config do logs
