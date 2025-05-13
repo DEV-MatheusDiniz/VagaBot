@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "automação linkedin vagas"
+name = "VagaBot"
 version = "0.1.0"
 description = ""
 authors = ["Diniz <mamakerrykinh@gmail.com>"]
