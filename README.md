@@ -1,6 +1,6 @@
 # Vaga Bot
 
-Tem o objetivo de coletar vagas e enviar via chat automaticamente.
+Tem o objetivo de coletar vagas e enviar via chat automaticamente. Atualmente o bot coleta vagas do linkedin e envia em chat ou grupo do telegram.
 
 ## Dependências
 - Python v3.12.3
