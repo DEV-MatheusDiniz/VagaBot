@@ -1,4 +1,3 @@
-import logging
 import environs
 
 
@@ -92,7 +91,7 @@ class Settings:
     MODO_OCULTO: bool = env.bool("MODO_OCULTO", default=False)
 
     # Scheduler
-    SCHEDULE_HORARIOS: list = [
+    SCHEDULE_HORARIOS: list[str] = [
         "08:00",
         "10:00",
         "12:00",
@@ -100,13 +99,6 @@ class Settings:
         "16:00",
         "18:00",
     ]
-
-    # Config do logs
-    logging.basicConfig(
-        format="%(levelname)s: %(asctime)s - %(message)s",
-        datefmt="%d/%m/%Y | %H:%M",
-        level="INFO",
-    )
 
 
 settings: Settings = Settings()

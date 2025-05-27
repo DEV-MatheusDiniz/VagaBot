@@ -1,12 +1,11 @@
-import logging
 from urllib.parse import urlparse, parse_qs
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from loguru import logger
 
 from app.services.browser import BrowserService
 from app.services.telegram import TelegramService
-
 from app.core.config import settings
 from app.utils.log_manage import LogManager
 
@@ -23,15 +22,17 @@ class AutomacaoLinkedin:
         """
         try:
             # Abrir browser e acessar o link
-            self.browser_service.iniciar_webdrive(self.CONFIGURACAO.LINKEDIN["link"], modo_oculto)
+            self.browser_service.iniciar_webdrive(
+                self.CONFIGURACAO.LINKEDIN["link"], modo_oculto
+            )
             self.__autenticacao()
             self.__acessar_aba_vagas()
 
             for job in self.CONFIGURACAO.JOBS_LINKEDIN_VAGAS:
                 # Log
-                logManager = LogManager("AutomacaoLinkedin")
-                logManager.add_row(f"Tema: {job["tema"]}")
-                logManager.add_row(f"Filtros: {job["filtros"]}")
+                logManager = LogManager("AutomacaoLinkedin::run")
+                logManager.add_row(f"Tema: {job['tema']}")
+                logManager.add_row(f"Filtros: {job['filtros']}")
 
                 self.__aplicar_filtro(**job["filtros"])
 
@@ -43,18 +44,24 @@ class AutomacaoLinkedin:
 
                     if possui_vagas:
                         lista_vagas = self.__coletar_vagas()
-                        lista_vagas_filtrada = self.__organizar_vagas_coletadas(lista_vagas)
-                        self.__enviar_vagas_telegram(lista_vagas_filtrada, job["telegram_chatid"])
+                        lista_vagas_filtrada = self.__organizar_vagas_coletadas(
+                            lista_vagas
+                        )
+                        self.__enviar_vagas_telegram(
+                            lista_vagas_filtrada, job["telegram_chatid"]
+                        )
 
                     logManager.add_row(f"Busca: {busca}")
-                    logManager.add_row(f"Quantidade de vagas: {len(lista_vagas_filtrada)}")
-                    
+                    logManager.add_row(
+                        f"Quantidade de vagas: {len(lista_vagas_filtrada)}"
+                    )
+
                 logManager.print_log()
-            
+
             self.browser_service.close_browser()
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: run ERROR: {erro}")
+        except Exception:
+            logger.exception("Erro na execução do job")
 
     def __autenticacao(self):
         """
@@ -81,8 +88,8 @@ class AutomacaoLinkedin:
                 "login__form_action_container", By.CLASS_NAME, clicar=True
             )
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __autenticacao ERROR: {erro}")
+        except Exception:
+            logger.exception("Erro na autenticação do linkedin")
 
     def __acessar_aba_vagas(self):
         """
@@ -91,9 +98,9 @@ class AutomacaoLinkedin:
         try:
             self.browser_service.acessar_link(settings.LINKEDIN["link_job_search"])
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __acessar_aba_vagas ERROR: {erro}")
-    
+        except Exception:
+            logger.exception("Erro em acessar a aba de vagas")
+
     def __buscar_vagas(self, texto_busca: str):
         """
         Realizar a busca pelas vagas
@@ -106,16 +113,17 @@ class AutomacaoLinkedin:
                 f"{texto_busca} {Keys.ENTER}",
             )
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __buscar_vagas ERROR: {erro}")
+        except Exception:
+            logger.exception(f"Erro ao buscar vagas, texo de busca: '{texto_busca}'")
 
     def __aplicar_filtro(
-            self, ordem_mais_recente: bool = True,
-            ultimos_24_horas: bool = True,
-            candidatura_simplificada: bool = True,
-            ate_10_candidaturas: bool = True,
-            remoto: bool = True
-        ):
+        self,
+        ordem_mais_recente: bool = True,
+        ultimos_24_horas: bool = True,
+        candidatura_simplificada: bool = True,
+        ate_10_candidaturas: bool = True,
+        remoto: bool = True,
+    ):
         """
         Adicionar filtro na busca das vagas
         """
@@ -163,15 +171,15 @@ class AutomacaoLinkedin:
                     By.XPATH,
                     clicar=True,
                 )
-            
+
             if remoto:
                 # Vagas remotas
                 self.browser_service.interagir_elemento(
                     """/html/body/div[4]/div/div/div[2]/ul/li[7]/fieldset/div/ul/li[3]/label/p/span[1]""",
                     By.XPATH,
-                    clicar=True
+                    clicar=True,
                 )
-            
+
             # Botão Submit filtro
             self.browser_service.interagir_elemento(
                 """/html/body/div[4]/div/div/div[3]/div/button[2]/span""",
@@ -179,9 +187,9 @@ class AutomacaoLinkedin:
                 clicar=True,
             )
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __aplicar_filtro ERROR: {erro}")
-    
+        except Exception:
+            logger.exception("Erro ao aplicar filtro")
+
     def __verificar_resultado_filtro(self) -> bool:
         """
         Verificar se o filtro aplicado, possui alguma vaga
@@ -194,12 +202,12 @@ class AutomacaoLinkedin:
             )
 
             if nao_possui_vagas:
-                return False # Não possui vagas
-            
-            return True # Possui vagas
+                return False  # Não possui vagas
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __verificar_resultado_filtro ERROR: {erro}")
+            return True  # Possui vagas
+
+        except Exception:
+            logger.exception("Erro em verificar resultado do filtro")
 
     def __coletar_vagas(self):
         """
@@ -263,20 +271,25 @@ class AutomacaoLinkedin:
                         vaga["tipo"] = f"{tipo_vaga_textos[0]} - {tipo_vaga_textos[2]}"
 
                         # Pegar URL da vaga
-                        vaga["url"] = self.__pegar_url_vaga(self.browser_service.get_url_atual())
-
+                        vaga["url"] = self.__pegar_url_vaga(
+                            self.browser_service.get_url_atual()
+                        )
 
                         # Pegar logo da empresa
                         logo_empresa = self.browser_service.interagir_elemento(
                             """//*[@id="main"]/div/div[2]/div[2]/div/div[2]/div/div/div[1]/div/div[1]/div/div[1]/div/div[1]/div[1]/a/div/div""",
                             By.XPATH,
                         )
-                        logo_empresa_img = logo_empresa.find_elements(By.TAG_NAME, "img")
+                        logo_empresa_img = logo_empresa.find_elements(
+                            By.TAG_NAME, "img"
+                        )
                         if len(logo_empresa_img) != 0:
-                            link_logo_empresa_img = logo_empresa_img[0].get_attribute("src")
+                            link_logo_empresa_img = logo_empresa_img[0].get_attribute(
+                                "src"
+                            )
                         else:
                             link_logo_empresa_img = None
-                        
+
                         vaga["logo_empresa"] = link_logo_empresa_img
 
                         lista_vagas.append(vaga)
@@ -286,9 +299,9 @@ class AutomacaoLinkedin:
                     contador += 1
 
             return lista_vagas
-        
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __coletar_vagas ERROR: {erro}")
+
+        except Exception:
+            logger.exception("Erro ao coletar as vagas")
 
     def __organizar_vagas_coletadas(self, lista_vagas: list):
         """
@@ -310,12 +323,10 @@ class AutomacaoLinkedin:
 
             return lista_vagas_filtrada
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __organizar_vagas_coletadas ERROR: {erro}")
+        except Exception:
+            logger.exception("Erro na organização das vagas coletadas")
 
-    def __enviar_vagas_telegram(
-            self, lista_vagas_filtrada: list, telegram_chatid: str
-        ):
+    def __enviar_vagas_telegram(self, lista_vagas_filtrada: list, telegram_chatid: str):
         """
         Enviar as vagas no chat do telegram
         """
@@ -329,16 +340,18 @@ class AutomacaoLinkedin:
                 logo_empresa = vaga["logo_empresa"]
 
                 mensagem = (
-                    f"<a href='{url}'>{titulo}</a> \n\n" +
-                    f"<b>Empresa:</b> {empresa} \n" +
-                    f"<b>Tipo:</b> {tipo} \n\n" +
-                    detalhes
+                    f"<a href='{url}'>{titulo}</a> \n\n"
+                    + f"<b>Empresa:</b> {empresa} \n"
+                    + f"<b>Tipo:</b> {tipo} \n\n"
+                    + detalhes
                 )
 
-                self.telegram_service.enviar_mensagem(mensagem, logo_empresa, telegram_chatid)
+                self.telegram_service.enviar_mensagem(
+                    mensagem, logo_empresa, telegram_chatid
+                )
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __enviar_vagas_telegram ERROR: {erro}")
+        except Exception:
+            logger.exception("Erro em enviar vagas no telegram")
 
     def __pegar_url_vaga(self, link_atual: str) -> str:
         """
@@ -359,5 +372,5 @@ class AutomacaoLinkedin:
             else:
                 return link_atual
 
-        except Exception as erro:
-            logging.error(f"FUNÇÃO: __pegar_url_vaga ERROR: {erro}")
+        except Exception:
+            logger.exception(f"Erro ao pegar URL da vaga, link: '{link_atual}'")

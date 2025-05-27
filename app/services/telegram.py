@@ -1,5 +1,6 @@
 import requests
-import logging
+
+from loguru import logger
 
 from app.core.config import settings
 from app.utils.log_manage import LogManager
@@ -39,7 +40,7 @@ class TelegramService:
 
             if response.status_code != 200:
                 """Erro"""
-                logging.error(f"{response.status_code} {response.text}")
+                logger.error(f"{response.status_code} {response.text}")
 
             return response.json()
 

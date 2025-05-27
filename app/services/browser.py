@@ -1,13 +1,17 @@
 import os
-import logging
 
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.common.exceptions import (
+    TimeoutException,
+    ElementNotInteractableException,
+    InvalidSessionIdException,
+)
 from webdriver_manager.firefox import GeckoDriverManager
+from loguru import logger
 
 from app.core.config import settings
 
@@ -41,8 +45,8 @@ class BrowserService:
 
             return True
 
-        except Exception as erro:
-            logging.error(erro)
+        except Exception:
+            logger.exception("Erro ao iniciar WebDriver")
 
     def interagir_elemento(
         self,
@@ -71,8 +75,14 @@ class BrowserService:
 
             return elemento
 
-        except Exception as erro:
-            logging.error(erro)
+        except TimeoutException:
+            logger.warning("Selenium: TimeOut")
+        except ElementNotInteractableException:
+            logger.warning("Selenium: Elemento não interativo")
+        except InvalidSessionIdException:
+            logger.Warning("Selenium: Sessão invalida")
+        except Exception:
+            logger.exception("Erro ao interagir com elemento")
 
     def get_url_atual(self):
         """
@@ -80,23 +90,23 @@ class BrowserService:
         """
         try:
             return self.browser.current_url
-        except Exception as erro:
-            logging.error(erro)
-    
+        except Exception:
+            logger.exception("Erro no get url")
+
     def close_browser(self):
         """
         Fechar o browser
         """
         try:
             self.browser.close()
-        except Exception as erro:
-            logging.error(erro)
-    
+        except Exception:
+            logger.exception("Erro ao fechar browser")
+
     def acessar_link(self, link: str):
         """
         Acessa um link
         """
         try:
             self.browser.get(link)
-        except Exception as erro:
-            logging.error(erro)
+        except Exception:
+            logger.exception("Erro ao acessar link")
