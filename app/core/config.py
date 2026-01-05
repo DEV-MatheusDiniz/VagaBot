@@ -25,6 +25,21 @@ class Settings:
 
     JOBS_LINKEDIN_VAGAS: list = [
         {
+            "tema": "Departamento Pessoal",
+            "telegram_chatid": env.str("JOBS_LINKEDIN_VAGAS_TELEGRAM_DP_CHATID"),
+            "buscas": [
+                """ Departamento pessoal """,
+                """ Administrativo """,
+            ],
+            "filtros": {
+                "ordem_mais_recente": True,
+                "ultimos_24_horas": True,
+                "candidatura_simplificada": False,
+                "ate_10_candidaturas": True,
+                "remoto": False,
+            },
+        },
+        {
             "tema": "Desenvolvimento de Software",
             "telegram_chatid": env.str("JOBS_LINKEDIN_VAGAS_TELEGRAM_DEV_CHATID"),
             "buscas": [
@@ -35,8 +50,8 @@ class Settings:
                 "ordem_mais_recente": True,
                 "ultimos_24_horas": False,
                 "candidatura_simplificada": False,
-                "ate_10_candidaturas": True,
-                "remoto": True,
+                "ate_10_candidaturas": False,
+                "remoto": False,
             },
         },
         {
@@ -48,9 +63,9 @@ class Settings:
             "filtros": {
                 "ordem_mais_recente": True,
                 "ultimos_24_horas": False,
-                "candidatura_simplificada": True,
-                "ate_10_candidaturas": True,
-                "remoto": True,
+                "candidatura_simplificada": False,
+                "ate_10_candidaturas": False,
+                "remoto": False,
             },
         },
         {
@@ -64,8 +79,8 @@ class Settings:
                 "ordem_mais_recente": True,
                 "ultimos_24_horas": False,
                 "candidatura_simplificada": False,
-                "ate_10_candidaturas": True,
-                "remoto": True,
+                "ate_10_candidaturas": False,
+                "remoto": False,
             },
         },
         {
@@ -79,7 +94,7 @@ class Settings:
             ],
             "filtros": {
                 "ordem_mais_recente": True,
-                "ultimos_24_horas": False,
+                "ultimos_24_horas": True,
                 "candidatura_simplificada": False,
                 "ate_10_candidaturas": True,
                 "remoto": False,
@@ -91,7 +106,21 @@ class Settings:
     MODO_OCULTO: bool = env.bool("MODO_OCULTO", default=False)
 
     # Scheduler
-    SCHEDULE_HORARIOS: list[str] = ["08:00", "12:00", "14:00", "18:00", "20:00"]
+    SCHEDULE_HORARIOS: list[str] = [
+        "08:00",
+        "09:00",
+        "10:00",
+        "11:00",
+        "12:00",
+        "13:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+        "18:00",
+        "19:00",
+        "20:00",
+    ]
 
 
 settings: Settings = Settings()
