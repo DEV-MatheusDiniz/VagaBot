@@ -17,6 +17,9 @@ from app.core.config import settings
 
 
 class BrowserService:
+    def __init__(self):
+        self.browser = None
+
     def iniciar_webdrive(self, link: str, modo_oculto: bool = False):
         """
         Criar o websriver do navegador Firefox
@@ -99,6 +102,7 @@ class BrowserService:
         """
         try:
             self.browser.close()
+            self.browser = None
         except Exception:
             logger.exception("Erro ao fechar browser")
 

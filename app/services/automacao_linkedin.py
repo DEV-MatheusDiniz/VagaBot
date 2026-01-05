@@ -1,4 +1,5 @@
 from urllib.parse import urlparse, parse_qs
+import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,11 +22,19 @@ class AutomacaoLinkedin:
         Fluxo da automação do Linkedin
         """
         try:
-            # Abrir browser e acessar o link
-            self.browser_service.iniciar_webdrive(
-                self.CONFIGURACAO.LINKEDIN["link"], modo_oculto
-            )
-            self.__autenticacao()
+            if not self.browser_service.browser:
+                # Abrir browser e acessar o link
+                self.browser_service.iniciar_webdrive(
+                    self.CONFIGURACAO.LINKEDIN["link"], modo_oculto
+                )
+                self.__autenticacao()
+
+            # Verificar se conseguiu logar
+            if  "checkpoint" in self.browser_service.get_url_atual():
+                self.browser_service.close_browser()
+                logger.critical("Caiu na tela de muitos acessos")
+                return
+
             self.__acessar_aba_vagas()
 
             for job in self.CONFIGURACAO.JOBS_LINKEDIN_VAGAS:
@@ -58,10 +67,9 @@ class AutomacaoLinkedin:
 
                 logManager.print_log()
 
-            self.browser_service.close_browser()
-
         except Exception:
             logger.exception("Erro na execução do job")
+            self.browser_service.close_browser()
 
     def __autenticacao(self):
         """
@@ -111,6 +119,13 @@ class AutomacaoLinkedin:
                 "jobs-search-box__keyboard-text-input",
                 By.CLASS_NAME,
                 f"{texto_busca} {Keys.ENTER}",
+            )
+
+            # Input Localidade - Texto
+            self.browser_service.interagir_elemento(
+                '//*[contains(@id, "jobs-search-box-location-id")]',
+                By.XPATH,
+                f"Brasília, Distri{Keys.ENTER}",
             )
 
         except Exception:
@@ -197,7 +212,7 @@ class AutomacaoLinkedin:
         try:
             # Informativo de que não encontrou nenhuma vaga
             nao_possui_vagas = self.browser_service.interagir_elemento(
-                """/html/body/div[6]/div[3]/div[4]/div/div[1]/div/p""",
+                """/html/body/div[5]/div[3]/div[4]/div/div[1]/div""",
                 By.XPATH,
             )
 
@@ -223,7 +238,7 @@ class AutomacaoLinkedin:
 
                     # Vagas
                     ul_vagas = self.browser_service.interagir_elemento(
-                        "/html/body/div[6]/div[3]/div[4]/div/div/main/div/div[2]/div[1]/div/ul",
+                        "/html/body/div[5]/div[3]/div[4]/div/div/main/div/div[2]/div[1]/div/ul",
                         By.XPATH,
                     )
 
@@ -264,7 +279,7 @@ class AutomacaoLinkedin:
 
                         # Pegar Tipo da Vaga
                         tipo_vaga_textos = self.browser_service.interagir_elemento(
-                            "job-details-jobs-unified-top-card__job-insight--highlight",
+                            "job-details-fit-level-preferences",
                             By.CLASS_NAME,
                         )
                         tipo_vaga_textos = tipo_vaga_textos.text.split("\n")

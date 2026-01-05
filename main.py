@@ -9,6 +9,8 @@ if __name__ == "__main__":
     try:
         automacao_linkedin = AutomacaoLinkedin()
 
+        logger.info(f"Horários agendados: {settings.SCHEDULE_HORARIOS}")
+
         JobSchedule().run(
             settings.SCHEDULE_HORARIOS,
             automacao_linkedin.run,
