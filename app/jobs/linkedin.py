@@ -11,11 +11,12 @@ from app.core.config import settings
 from app.utils.log_manage import LogManager
 
 
-class AutomacaoLinkedin:
-    def __init__(self):
+class LinkedinJob:
+    def __init__(self, modo_oculto: bool = True):
         self.CONFIGURACAO = settings
         self.browser_service = BrowserService()
         self.telegram_service = TelegramService()
+        self.run(modo_oculto)
 
     def run(self, modo_oculto: bool = True):
         """
@@ -23,10 +24,8 @@ class AutomacaoLinkedin:
         """
         try:
             if not self.browser_service.browser:
-                # Abrir browser e acessar o link
-                self.browser_service.iniciar_webdrive(
-                    self.CONFIGURACAO.LINKEDIN["link"], modo_oculto
-                )
+                self.browser_service.criar_instancia(modo_oculto)
+                self.browser_service.acessar_link(self.CONFIGURACAO.LINKEDIN["link"])
                 self.__autenticacao()
 
             # Verificar se conseguiu logar

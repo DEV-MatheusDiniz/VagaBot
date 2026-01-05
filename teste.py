@@ -1,6 +1,6 @@
 from loguru import logger
 
-from app.services.automacao_linkedin import AutomacaoLinkedin
+from app.jobs.linkedin import AutomacaoLinkedin
 from app.core.config import settings
 
 

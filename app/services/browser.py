@@ -20,10 +20,8 @@ class BrowserService:
     def __init__(self):
         self.browser = None
 
-    def iniciar_webdrive(self, link: str, modo_oculto: bool = False):
-        """
-        Criar o websriver do navegador Firefox
-        """
+    def criar_instancia(self, modo_oculto: bool = True):
+        """Iniciar webdriver"""
         try:
             # Token do GitHub para ser usado
             # nas requisições de intalação do Firefox
@@ -44,12 +42,14 @@ class BrowserService:
                 service=Service(path_driver), options=firefox_options
             )
 
-            self.browser.get(link)
+            if not self.browser:
+                raise RuntimeError("Falha ao criar instância do WebDriver")
 
             return True
-
+        except RuntimeError:
+            raise
         except Exception:
-            logger.exception("Erro ao iniciar WebDriver")
+            logger.exception("Erro ao iniciar browser com webdriver")
 
     def interagir_elemento(
         self,

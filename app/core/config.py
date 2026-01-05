@@ -106,21 +106,7 @@ class Settings:
     MODO_OCULTO: bool = env.bool("MODO_OCULTO", default=False)
 
     # Scheduler
-    SCHEDULE_HORARIOS: list[str] = [
-        "08:00",
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-    ]
+    SCHEDULE_HORARIOS: str = "08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20"
 
 
 settings: Settings = Settings()
