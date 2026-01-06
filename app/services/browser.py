@@ -38,9 +38,10 @@ class BrowserService:
             path_driver = GeckoDriverManager().install()
 
             # Inicializa o WebDriver com as opções configuradas
-            self.browser = webdriver.Firefox(
-                service=Service(path_driver), options=firefox_options
-            )
+            if not self.browser:
+                self.browser = webdriver.Firefox(
+                    service=Service(path_driver), options=firefox_options
+                )
 
             if not self.browser:
                 raise RuntimeError("Falha ao criar instância do WebDriver")

@@ -3,6 +3,7 @@ import time
 from loguru import logger
 
 from app.core.scheduler import start_scheduler, close_scheduler
+from app.services.browser import BrowserService
 
 
 if __name__ == "__main__":

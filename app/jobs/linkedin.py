@@ -12,11 +12,10 @@ from app.utils.log_manage import LogManager
 
 
 class LinkedinJob:
-    def __init__(self, modo_oculto: bool = True):
+    def __init__(self):
         self.CONFIGURACAO = settings
         self.browser_service = BrowserService()
         self.telegram_service = TelegramService()
-        self.run(modo_oculto)
 
     def run(self, modo_oculto: bool = True):
         """
@@ -27,14 +26,15 @@ class LinkedinJob:
                 self.browser_service.criar_instancia(modo_oculto)
                 self.browser_service.acessar_link(self.CONFIGURACAO.LINKEDIN["link"])
                 self.__autenticacao()
+                input()
 
-            # Verificar se conseguiu logar
-            if  "checkpoint" in self.browser_service.get_url_atual():
-                self.browser_service.close_browser()
-                logger.critical("Caiu na tela de muitos acessos")
-                return
+                # Verificar se conseguiu logar
+                if  "checkpoint" in self.browser_service.get_url_atual():
+                    self.browser_service.close_browser()
+                    logger.critical("Caiu na tela de muitos acessos")
+                    return
 
-            self.__acessar_aba_vagas()
+                self.__acessar_aba_vagas()
 
             for job in self.CONFIGURACAO.JOBS_LINKEDIN_VAGAS:
                 # Log
@@ -46,6 +46,7 @@ class LinkedinJob:
 
                 for busca in job["buscas"]:
                     self.__buscar_vagas(busca)
+                    time.sleep(3)
                     possui_vagas = self.__verificar_resultado_filtro()
 
                     lista_vagas_filtrada = []

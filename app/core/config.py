@@ -25,11 +25,10 @@ class Settings:
 
     JOBS_LINKEDIN_VAGAS: list = [
         {
-            "tema": "Departamento Pessoal",
+            "tema": "Departamento Pessoal e Recursos Humanos",
             "telegram_chatid": env.str("JOBS_LINKEDIN_VAGAS_TELEGRAM_DP_CHATID"),
             "buscas": [
-                """ Departamento pessoal """,
-                """ Administrativo """,
+                """ ("Assistente" OR "Auxiliar") AND ("Departamento Pessoal" OR "Recusrsos Humanos") """
             ],
             "filtros": {
                 "ordem_mais_recente": True,
@@ -48,9 +47,9 @@ class Settings:
             ],
             "filtros": {
                 "ordem_mais_recente": True,
-                "ultimos_24_horas": False,
+                "ultimos_24_horas": True,
                 "candidatura_simplificada": False,
-                "ate_10_candidaturas": False,
+                "ate_10_candidaturas": True,
                 "remoto": False,
             },
         },
@@ -62,9 +61,9 @@ class Settings:
             ],
             "filtros": {
                 "ordem_mais_recente": True,
-                "ultimos_24_horas": False,
+                "ultimos_24_horas": True,
                 "candidatura_simplificada": False,
-                "ate_10_candidaturas": False,
+                "ate_10_candidaturas": True,
                 "remoto": False,
             },
         },
@@ -77,9 +76,9 @@ class Settings:
             ],
             "filtros": {
                 "ordem_mais_recente": True,
-                "ultimos_24_horas": False,
+                "ultimos_24_horas": True,
                 "candidatura_simplificada": False,
-                "ate_10_candidaturas": False,
+                "ate_10_candidaturas": True,
                 "remoto": False,
             },
         },

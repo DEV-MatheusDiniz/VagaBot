@@ -29,10 +29,12 @@ def start_scheduler():
     - Adiciona o listener para registrar logs de execução e falhas.
     """
     if not scheduler.running:
+        linkedin_job = LinkedinJob()
+
         # Agendamento das tasks
         scheduler.add_job(
             id="LinkedinJob",
-            func=LinkedinJob,
+            func=linkedin_job.run,
             kwargs={"modo_oculto": settings.MODO_OCULTO},
             max_instances=1,
 
@@ -40,7 +42,7 @@ def start_scheduler():
             # hour=settings.SCHEDULE_HORARIOS,
             
             trigger="interval",
-            seconds=15,
+            seconds=5,
         )
 
         # Adiciona listener de logs
